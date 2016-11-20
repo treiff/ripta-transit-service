@@ -36,7 +36,10 @@ func main() {
 
 	fm := new(transit_realtime.FeedMessage)
 	err = proto.Unmarshal(feed, fm)
-	//fmt.Printf("%v", fm)
-	fmt.Printf("%v", fm.GetEntity())
+
+	for i, fe := range fm.Entity {
+		fmt.Printf("Entity %d:\n", i)
+		fmt.Printf("%v\n", fe.GetVehicle())
+	}
 
 }
