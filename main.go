@@ -1,33 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/golang/protobuf/proto"
-	"github.com/treiff/transit_service/transit_realtime"
+	"github.com/treiff/ripta-transit-service/transit_realtime"
 	"log"
 )
 
 func main() {
-	test := &transit_realtime.VehicleDescriptor{
-		Id:           proto.String("1"),
-		Label:        proto.String("test vehicle"),
-		LicensePlate: proto.String("12345"),
-	}
-
-	data, err := proto.Marshal(test)
-	if err != nil {
-		log.Fatal("marshaling error: ", err)
-	}
-
-	newTest := &transit_realtime.VehicleDescriptor{}
-	err = proto.Unmarshal(data, newTest)
-	if err != nil {
-		log.Fatal("unmarshaling error: ", err)
-	}
-
-	if test.GetLabel() != newTest.GetLabel() {
-		log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
-	}
 
 	feed, err := fetchVehicleFeed()
 	if err != nil {
@@ -37,9 +18,25 @@ func main() {
 	fm := new(transit_realtime.FeedMessage)
 	err = proto.Unmarshal(feed, fm)
 
-	for i, fe := range fm.Entity {
-		fmt.Printf("Entity %d:\n", i)
-		fmt.Printf("%v\n", fe.GetVehicle())
-	}
+	for _, fe := range fm.Entity {
+		//vehId := fe.GetVehicle().Vehicle.GetId()
+		//lat := fe.GetVehicle().Position.GetLatitude()
+		//long := fe.GetVehicle().Position.GetLongitude()
+		//bearing := fe.GetVehicle().Position.GetBearing()
+		//speed := fe.GetVehicle().Position.GetSpeed()
 
+		//vehicle := Bus{vehId: Position{
+		//	PositionFields{
+		//		Latitude:  lat,
+		//		Longitude: long,
+		//		Speed:     speed,
+		//		Bearing:   bearing,
+		//	},
+		//},
+		//}
+
+		//js, _ := json.MarshalIndent(vehicle, "", "  ")
+		js, _ := json.MarshalIndent(fe.GetVehicle(), "", "  ")
+		fmt.Printf("%s", js)
+	}
 }
