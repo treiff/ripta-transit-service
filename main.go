@@ -18,6 +18,7 @@ func main() {
 
 	for _, fe := range fm.Entity {
 		vehId := fe.GetVehicle().Vehicle.GetId()
-		updateDb(fe.GetVehicle(), vehId)
+		position := fe.GetVehicle().Position
+		updatePosition(position, vehId)
 	}
 }
